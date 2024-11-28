@@ -2,9 +2,13 @@ package com.usermsa.entity;
 
 import com.usermsa.dto.UserDto;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class UserEntity {
 
     @Id
