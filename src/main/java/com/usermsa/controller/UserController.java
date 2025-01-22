@@ -1,11 +1,10 @@
 package com.usermsa.controller;
 
-import com.usermsa.dto.RequestUser;
-import com.usermsa.dto.ResponseUser;
-import com.usermsa.dto.UserDto;
+import com.usermsa.dto.*;
 import com.usermsa.service.UserService;
 import com.usermsa.vo.Greeting;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -32,9 +31,23 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity createUser(@RequestBody RequestUser user) {
-        userService.createUser(new UserDto(user));
-        return new ResponseEntity(HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@RequestBody RequestUser user) {
+        UserDto createdUser = userService.createUser(new UserDto(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Void> loginUser(@RequestBody RequestLogin login) {
+        HttpHeaders headers = new HttpHeaders();
+
+        LoginDto loginDto = userService.login(login);
+
+        headers.add("token", loginDto.token());
+        headers.add("userId", loginDto.userId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(headers)
+                .build();
     }
 
     @GetMapping("/users")
