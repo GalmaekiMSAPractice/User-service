@@ -4,11 +4,11 @@ import com.usermsa.dto.LoginDto;
 import com.usermsa.dto.RequestLogin;
 import com.usermsa.dto.UserDto;
 import com.usermsa.entity.UserEntity;
+import com.usermsa.jwt.JwtBean;
 import com.usermsa.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Environment env;
+    private final JwtBean jwtBean;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -59,9 +59,8 @@ public class UserServiceImpl implements UserService {
         String token = Jwts.builder()
                 .setSubject(user.getUserId())
                 .setExpiration(
-                        new Date(System.currentTimeMillis()
-                                + Long.parseLong(env.getProperty("token.expiration_time"))))
-                .signWith(SignatureAlgorithm.HS256, env.getProperty("token.secret"))
+                        new Date(System.currentTimeMillis() + jwtBean.getExpiration_time()))
+                .signWith(SignatureAlgorithm.HS256, jwtBean.getSecret())
                 .compact();
 
         return new LoginDto(token, user.getUserId());

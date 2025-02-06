@@ -1,9 +1,10 @@
 package com.usermsa.controller;
 
 import com.usermsa.dto.*;
+import com.usermsa.jwt.JwtBean;
 import com.usermsa.service.UserService;
-import com.usermsa.vo.Greeting;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +18,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-
-    private Greeting greeting;
+    private final JwtBean jwtBean;
 
     @GetMapping("/healthcheck")
     public String status() {
-        return "Working Now";
-    }
-
-    @GetMapping("/welcome")
-    public String welcome() {
-        return greeting.getMessage();
+        return "token-secret : " + jwtBean.getSecret()
+                + "token-time : "+jwtBean.getExpiration_time();
     }
 
     @PostMapping("/users")

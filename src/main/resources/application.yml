@@ -2,16 +2,21 @@ server:
   port: 0000
 
 spring:
+  application:
+    name: user-service
+  profiles:
+    active: default
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      name: ecommerce,test
   h2:
     console:
       enabled: true
       settings:
         web-allow-others: true
-  application:
-    name: user-service
 
-env:
-  message: Greeting
 
 eureka:
   instance:
@@ -22,6 +27,3 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
-token:
-  expiration_time: 600000
-  secret: mPz6K217B4v8rK7YuG1d0kZ1R5yW9aqSfdsasgw45646546agdfdsbx
