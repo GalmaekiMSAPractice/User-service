@@ -27,6 +27,7 @@ repositories {
 ext {
     set('springCloudVersion', "2024.0.0")
 }
+
 dependencies {
     // 스프링 부트
     implementation 'org.springframework.boot:spring-boot-starter-web'
